@@ -1,0 +1,83 @@
+﻿@using Entities
+@using Business
+
+
+<hr />
+<!-- evento para usar cuando cambie onchange-->
+<select class="form-control" @onchange="CategoryChange">
+    <option value="1"> Seleccione </option>
+    @foreach (var category in categories)
+    {
+        <option value="@category.CategoryId"> @category.CategoryName</option>
+
+    }
+
+</select>
+
+<hr />
+
+
+
+<table class="table table-hover table-bordered">
+    <thead>
+        <tr>
+            <th>Referencia</th>
+            <th>Nombre producto</th>
+            <th>Descripción del producto.</th>
+            <th>Categoria</th>
+            <th>Cantidad</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in tempProducts)
+        {
+        <tr>
+            <td>@product.ProductId</td>
+            <td>@product.ProductName</td>
+            <td>@product.ProductDescription</td>
+            <td>@product.CategoryId</td>
+            <td>@product.TotalQuantity</td>
+            <td><a href="product/update/@product.ProductId">Editar</a></td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+
+@message
+
+
+@code {
+
+    // Lista de productos
+    List<ProductEntity> products = new List<ProductEntity>();
+
+    // Lista de productos temporal
+    List<ProductEntity> tempProducts = new List<ProductEntity>();
+
+    // lista de categorias para filtro
+    List<CategoryEntity> categories = new List<CategoryEntity>();
+
+    string message;
+
+    // cargar al iniciar la pagina
+    protected override async Task OnInitializedAsync()
+    {
+        products = B_Product.ProductList();
+        tempProducts = products;
+        categories = B_Category.CategoryList();
+    }
+
+
+    // funcion para flitro por categoria evento cuando cambia id
+    private void CategoryChange(ChangeEventArgs e)
+    {
+        message = e.Value.ToString();
+
+        // filtro por categoria seleccionada
+        tempProducts = products.Where(c => c.CategoryId == e.Value.ToString() ).ToList();
+
+
+    }
+}

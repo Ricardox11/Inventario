@@ -1,0 +1,69 @@
+﻿@using Entities
+@using Business
+
+@inject NavigationManager NavManager
+    <!-- manejo de navegacion -->
+
+
+    <div>
+
+        <EditForm Model="product">
+            <!-- Formulario Razor -->
+            <!-- Objetos Razor -->
+
+            <div class="form-group">
+                <label> Referencia:</label>
+                <InputText @bind-Value="product.ProductId" class="form-control"></InputText>
+            </div>
+            <div class="form-group">
+                <label> Nombre Producto:</label>
+                <InputText @bind-Value="product.ProductName" class="form-control"></InputText>
+            </div>
+            <div class="form-group">
+                <label> Producto Descripción</label>
+                <InputTextArea @bind-Value="product.ProductDescription" class="form-control"></InputTextArea>
+            </div>
+
+
+            <div class="form-group">
+                <label> Categoria:</label>
+                <InputSelect @bind-Value="product.CategoryId" class="form-control">
+                    @foreach (var category in categories)
+                    {
+                        <option value="@category.CategoryId"> @category.CategoryName </option>
+                    }
+
+
+                </InputSelect>
+
+            </div>
+
+
+            <input type="button" value="Agregar Producto" @onclick="SaveProduct" />
+
+        </EditForm>
+
+    </div>
+
+
+    @code {
+
+        // crear objeto
+        ProductEntity product = new ProductEntity();
+
+        // lista para categorias
+        List<CategoryEntity> categories = new List<CategoryEntity>();
+
+        // inicializa en el momento de la carga de la pagina
+        protected override async Task OnInitializedAsync()
+        {
+            categories = B_Category.CategoryList();
+        }
+
+        private void SaveProduct()
+        {
+            B_Product.CreateProduct(product); // static
+            NavManager.NavigateTo("product/list"); // navegacion 
+        }
+
+    }

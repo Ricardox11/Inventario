@@ -1,0 +1,35 @@
+﻿<!-- Blazor bind enlaza con variables de code -->
+<input  type="text" @bind-value="@message" />
+<input type="text" @bind-value="@text" />
+<input type="button" value="Click" @onclick="ChangeText" />
+
+
+
+<div > @message </div>
+
+
+@code{
+
+    // define parametro
+    [Parameter]
+    public string Message { get; set; }
+
+    // define variables
+
+    string message = "pruebatexto";
+    string text;
+
+    // inicializa async
+    protected override async Task OnInitializedAsync()
+    {
+         message = Message;
+    }
+
+
+
+    private void ChangeText()
+    {
+        message = text;
+
+    }
+}   
